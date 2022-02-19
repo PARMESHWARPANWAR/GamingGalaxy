@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase/firebase";
+import Loading from "../HomePage/Loading";
 import Banner from "./Banner";
 
 function Banners() {
     const [user,setUser] = useState("Parmeshwar");
     const [tournaments, loading, error] = useCollection(db.collection("Tournaments").doc(
       "UpcomingMatches").collection("pubg"));
+    //  db.collection("Tournaments").docs.map((doc) => {
+
+    //  }) 
   
      function joinTournament(id){
       db.collection("Tournaments").doc(
@@ -14,9 +18,9 @@ function Banners() {
           name : user,
         })
      }
-    
+     
     if(loading){
-      return <h1>Loading...</h1>;
+      return <Loading />;
     }
 
   return <div>
