@@ -36,6 +36,17 @@
   );
 }
 
+.banner_joined_button{
+  cursor: pointer;
+  color: rgb(9, 148, 51);
+  outline: none;
+  border: none;
+  font-weight: 700;
+  border-radius: 0.2vw;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  margin-right: 1rem;
+}
 .banner_button {
   cursor: pointer;
   color: #fff;
