@@ -11,7 +11,6 @@ import {
 } from "react-router-dom";
 import { auth } from "./firebase/firebase";
 import Profile from "./components/user/Profile";
-import Loading from "./components/HomePage/Loading";
 import Header from "./components/header/Header";
 import About from "./components/about/About";
 function App() {

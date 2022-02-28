@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./Banner.css";
-import { db } from "../../firebase/firebase";
+import { auth, db } from "../../firebase/firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 
 function Banner({
-  user,
   key,
   banner,
   title,
@@ -20,12 +19,28 @@ function Banner({
   joinTournaments,
 }) {
 
+  // const greater = new Date(element.get('expire') as admin.firestore.Timestamp) > new Date();
+  // const lower = new Date(element.get('expire') as admin.firestore.Timestamp) < new Date();
+  
+  const [user, setUser] = useState(null);
+
   const [joined, setJoined] = useState(false);
   const [processing, setProcessing] = useState("");
   const [tournaments, loading, error] = useCollection(
-    db.collection("users").doc(user).collection("tournaments")
+    db.collection("users").doc(user?.uid).collection("tournaments")
   );
 
+  useEffect(()=> {
+  	const unsubscribe = auth.onAuthStateChanged((user) => {
+  		if(user) {
+  			setUser(user);
+  		} else {
+  			setUser(null);
+  		}
+  	});
+
+  	return unsubscribe;
+  }, []);
 
   useEffect(() => {
     tournaments?.docs.map((doc) =>{

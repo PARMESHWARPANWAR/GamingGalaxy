@@ -1,60 +1,60 @@
 import React, { useEffect, useState } from "react";
 import "../css/Orders.css";
 import { db } from "../js/firebase";
-import { useStateValue } from "../stateProvider";
-import Order from "./Order";
+import JoinedTournament from "./JoinedTournament";
 
 function JoinedTournaments() {
-	const [{ basket, user }, dispatch] = useStateValue();
-	const [tournaments, setTournaments] = useState([]);
+  const [user, setUser] = useState(null);
+  const [tournaments, loading, error] = useCollection(
+    db
+      .collection("users")
+      .doc(user?.uid)
+      .collection("tournaments")
+      .where("public", "==", true)
+  );
 
-	useEffect(() => {
-		if (user) {
-			db.collection("users")
-				.doc(user?.uid)
-				.collection("tournaments")
-				.orderBy("created", "desc")   // sort by created time    
-				.onSnapshot((snapshot) =>
-					setTournaments(
-						snapshot.docs.map((doc) => ({
-							id: doc.id,
-							data: doc.data(),
-						}))
-					)
-				);
-		} else {
-			setTournaments([]);
-		}
-	}, [user]);
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
 
-	return (
-		<div className="joined_tournaments">
-			<div className="joined_tournaments__container">
-				<div className="joined_tournaments__title">
-					<h3>Your Tournaments</h3>
-				</div>
+    return unsubscribe;
+  }, []);
 
-				<div className="joined_tournaments__tournaments">
 
-					{orders.length === 0 && (
-						<div className="checkout__main">
-							<img
-								className="checkout__image"
-								src="https://m.media-amazon.com/images/G/01/cart/empty/kettle-desaturated._CB445243794_.svg"
-							/>
-							<h3 className="checkout__emptyCart">You have no Tournaments</h3>
-						</div>
-					)}
+  // history.replace("/tournaments");
 
-					{tournaments?.map((tournament) => (
-						<Order tournament={tournament} />
-					))}
-				</div>
-			</div>
-		</div>
-	);
+  //const greater = new Date(element.get('expire') as admin.firestore.Timestamp) > new Date();
+  //const lower = new Date(element.get('expire') as admin.firestore.Timestamp) < new Date();
+  if (loading) {
+    return <Loading />;
+  }
+
+  return (
+    <div>
+      {tournaments?.docs.map((doc) => (
+        <JoinedTournament
+          // user = {user}
+          key={doc.id}
+          id={doc.id}
+          title={doc.data().title}
+          time={doc.data().time}
+          date={doc.data().date}
+          maxPlayers={doc.data().maxPlayers}
+          teamPlayer={doc.data().teamPlayer}
+          state={doc.data().public}
+          timestamp={doc.data().timestamp}
+          banner={doc.data().banner}
+          description={doc.data().description}
+          joinTournaments={joinTournament}
+        />
+      ))}
+    </div>
+  );
 }
 
 export default JoinedTournaments;
-
-
